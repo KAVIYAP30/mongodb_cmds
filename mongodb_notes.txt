@@ -1,0 +1,104 @@
+Database-mongodb
+
+commands
+show dbs
+use school
+show collections
+use theatres
+
+//create database
+db.createCollection("movies")
+show collections
+db.students.find()
+db.students.insertOne({name:"Raja",rollno:"21csr106"})
+
+//array of json
+db.students.insertMany([{},{},{}])
+
+create db: use dbname
+create coll: db.createCollection("colname")
+insert data: db.col_name.insertOne({})
+insert multiple: db.col_name.insertMany([{},{},{}])
+
+
+//all datatypes
+db.students.insertOne({name:"Tamil",mark:100,avg:2.22,ispass:true,doj:new Date()})
+
+
+db.<collection-name>.find({name:"bruce",gpa:10})
+
+//disable id and find
+db.<collection-name>.find({},{_id:false,name:true,rollno:true})
+
+
+
+//unset used to delete  the data(delete only the data not the entire object)
+db.<collection-name>.updateOne( { name: "" }, { $unset: { name: "" } }) 
+
+
+//set used to change particular data
+db.<collection-name>.updateOne( { name: "kavss" }, { $set: { name: "malar" } })
+
+//delete one from the collection
+db.<collection-name>.deleteOne({ name: "kavss" })
+
+//to find something using query
+db.<collection-name>.find({id:{$eq:1}})
+$eq: Values are equal
+$ne: Values are not equal
+$gt: Value is greater than another value
+$gte: Value is greater than or equal to another value
+$lt: Value is less than another value
+$lte: Value is less than or equal to another value
+$in: Value is matched within an array
+
+//deleting the particular attribute by using exist
+db.<collection-name>.deleteMany({particular_attribute:{$exists:true}})
+
+//afternoon session
+//find()
+based on id the documents will be sorted
+id-hexadecimal format
+
+db.movies.find().sort({"moviename":1})//ascending
+
+db.movies.find().sort({"moviename":-1})//descending
+
+
+pagination:
+limit function-> for particular page limit of contents will be declared
+//no of datas need to get data
+to avoid to get above 7000 datas,it causes delay
+
+db.movies.find().limit(1)
+
+//skip->to skip the already fetched data
+db.movies.find().limit(1).skip(1)
+db.movies.find().sort({rating:1}).limit(1).skip(1)
+
+//logical operator
+db.movie.find({ $or:[{rel:2021},{rating:{$lt:3}}]})
+db.movie.find({rating:{$not:{$gt:2}}})
+db.movie.find({ $and:[{rel:2021},{rating:{$lt:3}}]})
+db.movie.find({ $nor:[{rel:2021},{rating:{$lt:3}}]})
+
+
+//indexing
+check each document one by one->linear search
+binary search reduce time
+
+command to check linear search
+
+db.movies.find({rating:4}).explain("executionStats")
+
+//output
+totaldocsexamined
+
+db.movies.createIndex({rating:1})
+//need to create index for eachh doc
+//insert query will become slow
+//repeated data reduced
+indexing-search fast
+
+//aggregate functions
+db.artist.aggregate([{$match:{rating:{$gte:5}}},{$group:{_id: "$song-name",totalRating:{$sum: "$rating"}}}])
